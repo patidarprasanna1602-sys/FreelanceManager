@@ -207,7 +207,7 @@ public class FreelanceManager extends JFrame {
         mainContent.removeAll();
         JPanel p = darkPanel();
         p.setLayout(new BorderLayout());
-        p.add(pageHeader("Dashboard", "Welcome back, Aarav! Here's your overview."), BorderLayout.NORTH);
+        p.add(pageHeader("Dashboard", "Welcome back, PRASANNA! Here's your overview."), BorderLayout.NORTH);
         JScrollPane scroll = new JScrollPane(buildDashboardBody());
         scroll.setBorder(null);
         scroll.getViewport().setBackground(BG_DARK);
@@ -263,7 +263,7 @@ public class FreelanceManager extends JFrame {
 
             // Recent Payments (top 5)
             ps = con.prepareStatement(
-                "SELECT description, amount, status, `date` FROM payments ORDER BY id DESC LIMIT 5");
+                "SELECT description, amount, status, date FROM payments ORDER BY id DESC LIMIT 5");
             rs = ps.executeQuery();
             while (rs.next())
                 recentPayments.add(new Object[]{rs.getString(1),"₹"+fmt(rs.getDouble(2)),rs.getString(3),rs.getString(4)});
@@ -545,23 +545,21 @@ public class FreelanceManager extends JFrame {
             } catch (Exception ex) { ex.printStackTrace(); }
             dlg.dispose();
             showClients();
-        });
-        btns.add(cancel); btns.add(save);
+        });  btns.add(cancel); btns.add(save);
         gc.gridx=0; gc.gridy=5; gc.gridwidth=2; gc.insets=new Insets(18,0,0,0);
         form.add(btns,gc);
         dlg.add(form);
         dlg.setVisible(true);
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // PROJECTS  — fully DB-driven
-    // ─────────────────────────────────────────────────────────────
+
     void showProjects() {
         mainContent.removeAll();
         JPanel p = darkPanel();
         p.setLayout(new BorderLayout());
         p.add(pageHeader("Projects", "Track your project pipeline"), BorderLayout.NORTH);
-
+ 
+       
         DefaultTableModel model = new DefaultTableModel(
             new String[]{"ID","Project Name","Client","Category","Status","Start","End","Value","Paid","Action"}, 0) {
             public boolean isCellEditable(int r, int c) { return c == 9; }
@@ -890,7 +888,7 @@ public class FreelanceManager extends JFrame {
         try {
             Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(
-                "SELECT py.id, py.description, c.name, pr.name, py.amount, py.`date`, py.method, py.status " +
+                "SELECT py.id, py.description, c.name, pr.name, py.amount, py.date, py.method, py.status " +
                 "FROM payments py JOIN clients c ON py.client_id=c.id JOIN projects pr ON py.project_id=pr.id " +
                 "ORDER BY py.id DESC");
             ResultSet rs = ps.executeQuery();
@@ -947,7 +945,7 @@ public class FreelanceManager extends JFrame {
             try {
                 Connection con = DBConnection.getConnection();
                 PreparedStatement ps = con.prepareStatement(
-                    "SELECT client_id,project_id,description,amount,`date`,method,status FROM payments WHERE id=?");
+                    "SELECT client_id,project_id,description,amount,date,method,status FROM payments WHERE id=?");
                 ps.setInt(1, editId);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
@@ -1008,7 +1006,7 @@ public class FreelanceManager extends JFrame {
                 Connection con = DBConnection.getConnection();
                 if (editId == -1) {
                     PreparedStatement ps = con.prepareStatement(
-                        "INSERT INTO payments(client_id,project_id,description,amount,`date`,method,status) VALUES(?,?,?,?,?,?,?)");
+                        "INSERT INTO payments(client_id,project_id,description,amount,date,method,status) VALUES(?,?,?,?,?,?,?)");
                     ps.setInt(1,cid); ps.setInt(2,pid); ps.setString(3,fDesc.getText().trim());
                     ps.setDouble(4,amt); ps.setString(5,fDate.getText().trim());
                     ps.setString(6,(String)fMethod.getSelectedItem());
@@ -1016,7 +1014,7 @@ public class FreelanceManager extends JFrame {
                     ps.executeUpdate();
                 } else {
                     PreparedStatement ps = con.prepareStatement(
-                        "UPDATE payments SET client_id=?,project_id=?,description=?,amount=?,`date`=?,method=?,status=? WHERE id=?");
+                        "UPDATE payments SET client_id=?,project_id=?,description=?,amount=?,date=?,method=?,status=? WHERE id=?");
                     ps.setInt(1,cid); ps.setInt(2,pid); ps.setString(3,fDesc.getText().trim());
                     ps.setDouble(4,amt); ps.setString(5,fDate.getText().trim());
                     ps.setString(6,(String)fMethod.getSelectedItem());
